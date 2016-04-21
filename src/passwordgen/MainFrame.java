@@ -1,21 +1,84 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package passwordgen;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
+import org.jdesktop.beansbinding.AutoBinding;
+import static org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE;
+import org.jdesktop.beansbinding.BeanProperty;
+import org.jdesktop.beansbinding.BindingGroup;
+import org.jdesktop.beansbinding.Bindings;
+import org.jdesktop.swingbinding.JTableBinding;
+import org.jdesktop.swingbinding.SwingBindings;
+import passwordgen.externallibraries.BeanTableModel;
 
 /**
  *
- * @author johndunn
  */
 public class MainFrame extends javax.swing.JFrame {
+
+    private PasswordGenerator generator;
+    private CredentialsList credentials;
+    private CredentialsBean activeCredentials;
+    private int currentIndex;
 
     /**
      * Creates new form MainFrame
      */
     public MainFrame() {
+        credentials = new CredentialsList();
+        generator = new PasswordGenerator();
+        credentials.add(new CredentialsBean("google", "johnMadsengoog", "myPass123goog"));
+        credentials.add(new CredentialsBean("facebook", "johnMadsenfb", "myPass123fb"));
+        credentials.add(new CredentialsBean("twitter", "johnMadsentwit", "myPass123twit"));
+        credentials.add(new CredentialsBean("instagram", "johnMadseninsta", "myPass123insta"));
+        credentials.add(new CredentialsBean("bank", "johnMadsenbank", "myPass123bank"));
+        credentials.add(new CredentialsBean("job", "johnMadsenjob", "myPass123job"));
+
         initComponents();
+        updateJTable();
+        activeCredentials = credentials.get(0);
+        bind();
+
+    }
+
+//    public void updateJTable(CredentialsBean bean) {
+//        DefaultTableModel model = (DefaultTableModel) credentialsTable.getModel();
+//        Object rowData[] = new Object[3];
+//        rowData[0] = bean.getWebsite();
+//        rowData[1] = bean.getUsername();
+//        rowData[2] = bean.getPassword();
+//        model.addRow(rowData);
+//        model.
+//    }
+    public void updateJTable() {
+        DefaultTableModel model = (DefaultTableModel) credentialsTable.getModel();
+        model.setRowCount(0);
+        Object rowData[] = new Object[3];
+        for (int i = 0; i < credentials.size(); i++) {
+            rowData[0] = credentials.get(i).getWebsite();
+            rowData[1] = credentials.get(i).getUsername();
+            rowData[2] = credentials.get(i).getPassword();
+            model.addRow(rowData);
+        }
+
+    }
+
+    private void bind() {
+        BindingGroup bindingGroup = new BindingGroup();
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, activeCredentials, org.jdesktop.beansbinding.ELProperty.create("${password}"), passwordTextBox, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, activeCredentials, org.jdesktop.beansbinding.ELProperty.create("${username}"), usernameTextBox, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ, activeCredentials, org.jdesktop.beansbinding.ELProperty.create("${website}"), websiteTextBox, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+//        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, generator, org.jdesktop.beansbinding.ELProperty.create("${symbolsRequired}"), symbolDropDown, org.jdesktop.beansbinding.BeanProperty.create("text"));
+//        bindingGroup.addBinding(binding);
+
+        bindingGroup.bind();
+
     }
 
     /**
@@ -27,53 +90,197 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        credentialsBean1 = new passwordgen.CredentialsBean();
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        jButton1 = new javax.swing.JButton();
-        SearchPassField = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
+        websiteTextBox = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        GenPassField = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        passwordTextBox = new javax.swing.JTextField();
+        generateButton = new javax.swing.JButton();
+        symbolDropDown = new javax.swing.JComboBox();
+        numberDropDown = new javax.swing.JComboBox();
+        upperDropDown = new javax.swing.JComboBox();
+        lowerDropDown = new javax.swing.JComboBox();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        maxLengthDropDown = new javax.swing.JComboBox();
+        minLengthDropDown = new javax.swing.JComboBox();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        saveSelectedButton = new javax.swing.JButton();
+        usernameTextBox = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        requirementErrorLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        credentialsTable = new javax.swing.JTable();
+        removeButton = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(660, 380));
 
         jLabel1.setFont(new java.awt.Font("Malayalam MN", 0, 24)); // NOI18N
         jLabel1.setText("Thou Shall Not Pass Word Keeper");
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(jList1);
+        searchButton.setText("Search");
 
-        jButton1.setText("Search");
-
-        SearchPassField.setText("Enter Website Name");
-        SearchPassField.addFocusListener(new java.awt.event.FocusAdapter() {
+        websiteTextBox.setText("Enter Website Name");
+        websiteTextBox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                SearchPassFieldFocusGained(evt);
+                websiteTextBoxFocusGained(evt);
             }
         });
-        SearchPassField.addActionListener(new java.awt.event.ActionListener() {
+        websiteTextBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SearchPassFieldActionPerformed(evt);
+                websiteTextBoxActionPerformed(evt);
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Malayalam Sangam MN", 0, 18)); // NOI18N
-        jLabel2.setText("Generate New Password");
+        jLabel2.setFont(new java.awt.Font("Malayalam Sangam MN", 0, 12)); // NOI18N
+        jLabel2.setText("Password");
 
-        GenPassField.setText("Enter Website Name");
-        GenPassField.addFocusListener(new java.awt.event.FocusAdapter() {
+        passwordTextBox.setText("Enter Password or Generate One.");
+        passwordTextBox.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                GenPassFieldFocusGained(evt);
+                passwordTextBoxFocusGained(evt);
             }
         });
 
-        jButton2.setText("Generate");
+        generateButton.setText("Generate");
+        generateButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                generateButtonMouseClicked(evt);
+            }
+        });
+
+        symbolDropDown.setMaximumRowCount(11);
+        symbolDropDown.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+        symbolDropDown.setToolTipText("Symbols");
+        symbolDropDown.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                symbolDropDownItemStateChanged(evt);
+            }
+        });
+
+        numberDropDown.setMaximumRowCount(11);
+        numberDropDown.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+        numberDropDown.setToolTipText("Symbols");
+
+        upperDropDown.setMaximumRowCount(11);
+        upperDropDown.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+        upperDropDown.setToolTipText("Symbols");
+
+        lowerDropDown.setMaximumRowCount(11);
+        lowerDropDown.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+        lowerDropDown.setToolTipText("Symbols");
+
+        jLabel3.setText("Symbols");
+
+        jLabel4.setText("Numbers");
+
+        jLabel5.setText("UpperCase");
+
+        jLabel6.setText("LowerCase");
+
+        maxLengthDropDown.setMaximumRowCount(11);
+        maxLengthDropDown.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40" }));
+        maxLengthDropDown.setToolTipText("Symbols");
+
+        minLengthDropDown.setMaximumRowCount(11);
+        minLengthDropDown.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30" }));
+        minLengthDropDown.setToolTipText("Symbols");
+
+        jLabel7.setText("Minimum Length");
+
+        jLabel8.setText("Maximum Length");
+
+        jLabel9.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel9.setText("Enter Minimum Required:");
+
+        saveSelectedButton.setText("Save to Selected Entry");
+        saveSelectedButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                saveSelectedButtonMouseClicked(evt);
+            }
+        });
+        saveSelectedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveSelectedButtonActionPerformed(evt);
+            }
+        });
+
+        usernameTextBox.setText("Username");
+        usernameTextBox.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                usernameTextBoxFocusGained(evt);
+            }
+        });
+        usernameTextBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameTextBoxActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Malayalam Sangam MN", 0, 12)); // NOI18N
+        jLabel10.setText("UserName");
+
+        credentialsTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Website", "Username", "Password"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        credentialsTable.setColumnSelectionAllowed(true);
+        credentialsTable.getTableHeader().setReorderingAllowed(false);
+        jScrollPane2.setViewportView(credentialsTable);
+        credentialsTable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        removeButton.setText("Remove Selected Entry");
+        removeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeButtonMouseClicked(evt);
+            }
+        });
+
+        editButton.setText("Edit Selected Entry");
+        editButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                editButtonMouseClicked(evt);
+            }
+        });
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+
+        saveButton.setText("Save to New Entry");
+        saveButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                saveButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -82,58 +289,208 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 283, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(GenPassField)
-                                    .addComponent(SearchPassField, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addContainerGap())
+                            .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(saveSelectedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(saveButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(requirementErrorLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(symbolDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel3))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(numberDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel4))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(upperDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel5))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(lowerDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel6))
+                                        .addGap(12, 12, 12)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(minLengthDropDown, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addGap(21, 21, 21)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel8)
+                                            .addComponent(maxLengthDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addGap(124, 124, 124)
+                                        .addComponent(generateButton)))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel10)
+                                        .addGap(117, 117, 117)
+                                        .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(websiteTextBox)
+                                    .addComponent(usernameTextBox)
+                                    .addComponent(passwordTextBox, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addContainerGap())))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 589, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(SearchPassField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
-                .addGap(33, 33, 33)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(GenPassField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(63, Short.MAX_VALUE))
+                    .addComponent(websiteTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(editButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel10)
+                        .addComponent(searchButton))
+                    .addComponent(removeButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(usernameTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(saveSelectedButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(jLabel2))
+                            .addComponent(generateButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(passwordTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(requirementErrorLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(symbolDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(numberDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(upperDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lowerDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(maxLengthDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(minLengthDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(saveButton))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void SearchPassFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchPassFieldActionPerformed
+    private void websiteTextBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_websiteTextBoxActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SearchPassFieldActionPerformed
+    }//GEN-LAST:event_websiteTextBoxActionPerformed
 
-    private void SearchPassFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_SearchPassFieldFocusGained
-        SearchPassField.setText("");
-    }//GEN-LAST:event_SearchPassFieldFocusGained
+    private void websiteTextBoxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_websiteTextBoxFocusGained
+        websiteTextBox.setText("");
+    }//GEN-LAST:event_websiteTextBoxFocusGained
 
-    private void GenPassFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_GenPassFieldFocusGained
-        GenPassField.setText("");
-    }//GEN-LAST:event_GenPassFieldFocusGained
+    private void passwordTextBoxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_passwordTextBoxFocusGained
+    }//GEN-LAST:event_passwordTextBoxFocusGained
+
+    private void usernameTextBoxFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_usernameTextBoxFocusGained
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usernameTextBoxFocusGained
+
+    private void usernameTextBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTextBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usernameTextBoxActionPerformed
+
+    private void symbolDropDownItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_symbolDropDownItemStateChanged
+
+    }//GEN-LAST:event_symbolDropDownItemStateChanged
+
+    private void generateButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_generateButtonMouseClicked
+        generator.setLowerCaseRequired(lowerDropDown.getSelectedIndex());
+        generator.setUpperCaseRequired(upperDropDown.getSelectedIndex());
+        generator.setSymbolsRequired(symbolDropDown.getSelectedIndex());
+        generator.setNumbersRequired(numberDropDown.getSelectedIndex());
+        generator.setMinLength(minLengthDropDown.getSelectedIndex());
+        generator.setMaxLength(maxLengthDropDown.getSelectedIndex() + 1);
+        if (generator.validRequirements()) {
+            requirementErrorLabel.setForeground(Color.green);
+            passwordTextBox.setText(generator.generatePassword());
+            requirementErrorLabel.setText("Valid Requirements!");
+        } else {
+            requirementErrorLabel.setForeground(Color.red);
+            requirementErrorLabel.setText("Invalid Requirements!");
+        }
+
+    }//GEN-LAST:event_generateButtonMouseClicked
+
+    private void saveSelectedButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveSelectedButtonMouseClicked
+        if (credentialsTable.getSelectedRowCount() == 1) {
+            int i = credentialsTable.getSelectedRow();
+            credentials.remove(i);
+            credentials.add(i, activeCredentials);
+            updateJTable();
+        }
+
+    }//GEN-LAST:event_saveSelectedButtonMouseClicked
+
+    private void removeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeButtonMouseClicked
+        if (credentialsTable.getSelectedRowCount() == 1) {
+            credentials.remove(credentialsTable.getSelectedRow());
+            updateJTable();
+
+        }
+
+    }//GEN-LAST:event_removeButtonMouseClicked
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void editButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_editButtonMouseClicked
+        if (credentialsTable.getSelectedRowCount() == 1) {
+            
+            activeCredentials = credentials.get(credentialsTable.getSelectedRow());
+//            websiteTextBox.setText(entry.getWebsite());
+//            usernameTextBox.setText(entry.getUsername());
+//            passwordTextBox.setText(entry.getPassword());
+        }
+        
+    }//GEN-LAST:event_editButtonMouseClicked
+
+    private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseClicked
+        CredentialsBean newEntry = new CredentialsBean(websiteTextBox.getText(), usernameTextBox.getText(), passwordTextBox.getText());
+        credentials.add(newEntry);
+        updateJTable();
+    }//GEN-LAST:event_saveButtonMouseClicked
+
+    private void saveSelectedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSelectedButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveSelectedButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -146,7 +503,7 @@ public class MainFrame extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -171,13 +528,35 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField GenPassField;
-    private javax.swing.JTextField SearchPassField;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private passwordgen.CredentialsBean credentialsBean1;
+    private javax.swing.JTable credentialsTable;
+    private javax.swing.JButton editButton;
+    private javax.swing.JButton generateButton;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPopupMenu jPopupMenu1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JComboBox lowerDropDown;
+    private javax.swing.JComboBox maxLengthDropDown;
+    private javax.swing.JComboBox minLengthDropDown;
+    private javax.swing.JComboBox numberDropDown;
+    private javax.swing.JTextField passwordTextBox;
+    private javax.swing.JButton removeButton;
+    private javax.swing.JLabel requirementErrorLabel;
+    private javax.swing.JButton saveButton;
+    private javax.swing.JButton saveSelectedButton;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JComboBox symbolDropDown;
+    private javax.swing.JComboBox upperDropDown;
+    private javax.swing.JTextField usernameTextBox;
+    private javax.swing.JTextField websiteTextBox;
     // End of variables declaration//GEN-END:variables
 }

@@ -25,6 +25,7 @@ public class Plivo {
     private String authId = "MANJZJYTZMMDDJYZUZN2";
     private String authToken = "ZTYyMTkzNDUyYjdjY2ZmNWNlMWNjMmMwNDBmOWQ4";
     private RestAPI api = new RestAPI(authId, authToken, "v1");
+    private boolean status = false;
 
     public Plivo() {
 
@@ -68,11 +69,16 @@ public class Plivo {
             if (msgResponse.serverCode == 202) {
                 // Print the Message UUID
                 System.out.println("Message UUID : " + msgResponse.messageUuids.get(0).toString());
+                status = true;
             } else {
                 System.out.println(msgResponse.error); 
             }
         } catch (PlivoException e) {
             System.out.println(e.getLocalizedMessage());
         }
+    }
+    
+    public boolean getStatus() {
+        return status;
     }
 }

@@ -103,16 +103,15 @@ public class Login extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(120, Short.MAX_VALUE)
+                .addContainerGap(150, Short.MAX_VALUE)
                 .addComponent(passCheckMain)
-                .addGap(64, 64, 64))
+                .addGap(34, 34, 34))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(passCheckMain)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addGap(0, 14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -226,8 +225,8 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_genTokenMouseClicked
 
     private void createNewUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createNewUserActionPerformed
-        NewUser userFrame = new NewUser();
-        userFrame.setVisible(true);
+        NewUserPanel user = new NewUserPanel();
+        PasswordGen.updateFrames(this, user);
     }//GEN-LAST:event_createNewUserActionPerformed
 
         
