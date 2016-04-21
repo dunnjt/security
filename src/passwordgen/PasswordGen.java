@@ -15,8 +15,11 @@ public class PasswordGen {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        PasswordList list = PasswordList.getInstance();
+        list.genPasswordList();
+
         Login login = new Login();
         login.setVisible(true);
     }
-    
+
 }

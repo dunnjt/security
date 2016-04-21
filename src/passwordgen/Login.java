@@ -24,7 +24,6 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
-        validatePasswordList();
     }
 
     /**
@@ -231,39 +230,27 @@ public class Login extends javax.swing.JFrame {
         userFrame.setVisible(true);
     }//GEN-LAST:event_createNewUserActionPerformed
 
-    private void validatePasswordList() {
-
-        try {
-            Scanner fileInput = new Scanner(new File("output.txt"));
-            while (fileInput.hasNext()) {
-                allPasswords.add(new Passwords(fileInput.next(), fileInput.next()));
-            }
-        }
-        catch(IOException e) {
-            
-        }
-    }
         
     private static void checkLoginAttempt() {
         
-        int index = -1;
+        PasswordList list = PasswordList.getInstance();
+        int index = list.getIndex(userNameField.getText());
         
-        for (int i = 0; i < allPasswords.size(); i++) {
-            if(userNameField.getText().equals(allPasswords.get(i).getUser())) {
-                index = i;
-            }
-        }
-        
-        String passString = new String(passwordField.getPassword());
-        String passwordToCheck = SHA256.getSHA256Hash(userNameField.getText() + passString);
-    
-        //need to read token here
-        if (allPasswords.get(index).getHash().equals(passwordToCheck)) {
-            MainFrame frame = new MainFrame();
-            frame.setVisible(true);
+        if (index == -1) {
+            passCheckMain.setText("Incorrect Login Information");
         }
         else {
-            passCheckMain.setText("Incorrect Login Information");
+            String passString = new String(passwordField.getPassword());
+            String passwordToCheck = SHA256.getSHA256Hash(userNameField.getText() + passString);
+    
+            //need to read token here
+            if (list.getPasswordList().get(index).getHash().equals(passwordToCheck)) {
+                MainFrame frame = new MainFrame();
+                frame.setVisible(true);
+            }
+            else {
+                passCheckMain.setText("Incorrect Login Information");
+            }
         }
     }
     /**
