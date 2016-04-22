@@ -10,7 +10,8 @@ import java.security.SecureRandom;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * LoginPanel is JPanel that contains login GUI components.
+ * Additional methods handle event/mouse Listener actions that trigger the handling of login attempts.
  * @author johndunn
  */
 public class LoginPanel extends javax.swing.JPanel {
@@ -166,11 +167,16 @@ public class LoginPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_genTokenMouseClicked
 
     private void LoginMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LoginMousePressed
-        if(sms.expiredToken()) {
-            JOptionPane.showMessageDialog(this, "Token Expired. Generate New Token");
+        if (sms==null) {
+            JOptionPane.showMessageDialog(this, "You Must Generate A New Token");
         }
         else {
-            checkLoginAttempt();
+            if(sms.expiredToken()) {
+                JOptionPane.showMessageDialog(this, "Token Expired. Generate A New Token");
+            }
+            else {
+                checkLoginAttempt();
+            }
         }
     }//GEN-LAST:event_LoginMousePressed
 
@@ -183,6 +189,12 @@ public class LoginPanel extends javax.swing.JPanel {
         PasswordGen.updateFrames(this, user);
     }//GEN-LAST:event_createNewUserActionPerformed
 
+    /**
+     * generateToken() generates a Token through Plivo API to send SMS.
+     * Method triggered through mouse event on Generate Token GUI component.
+     * Static method allows it to be called multiple times on single JPanel.
+     * Checks for edge cases such as incorrect username.
+     */
     private static void generateToken() {
         
         PasswordList list = PasswordList.getInstance();
@@ -196,6 +208,7 @@ public class LoginPanel extends javax.swing.JPanel {
             sms = new Plivo();
             token = sms.createCode();
             sms.startTimer();
+            sms.sendCodeTest(token, list.getPasswordList().get(index).getPhone());
             //sms.sendCode(token, list.getPasswordList().get(index).getPhone());
             passCheckMain.setForeground(Color.green);
             passCheckMain.setText("Token Generated");
@@ -203,6 +216,11 @@ public class LoginPanel extends javax.swing.JPanel {
         
     }
     
+    /**
+     * checkLoginAttempt() takes values from username, pass and token text fields and checks credentials.
+     * Static method allows multiple calls on single JPanel.
+     * Checks for edge cases: username incorrect, password incorrect, token incorrect.
+     */
     private static void checkLoginAttempt() {
         
         PasswordList list = PasswordList.getInstance();
@@ -214,7 +232,7 @@ public class LoginPanel extends javax.swing.JPanel {
         }
         else {
             String passString = new String(passwordField.getPassword());
-            String passwordToCheck = SHA256.getSHA256Hash(userNameField.getText() + passString);
+            String passwordToCheck = SHA256.getSHA256Hash(userNameField.getText() + list.getPasswordList().get(index).getSalt() + passString);
     
             //need to read token here
             if (list.getPasswordList().get(index).getHash().equals(passwordToCheck)&&tokenCheck()) {
@@ -227,13 +245,20 @@ public class LoginPanel extends javax.swing.JPanel {
         }
     }
     
+    /**
+     * validateLogin() launches new JPanel if credentials pass.
+     */
     private static void validateLogin() {
         MainPanel main = new MainPanel();
         PasswordGen.updateFrames(main); 
     }
     
+    /**
+     * tokenCheck() ensures user input from JTextField matches token sent via SMS.
+     * @return boolean condition of match.
+     */
     private static boolean tokenCheck() {
-        return tokenField.getText().equals(Integer.toString(token)) && !sms.expiredToken();
+        return tokenField.getText().equals(Integer.toString(token));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

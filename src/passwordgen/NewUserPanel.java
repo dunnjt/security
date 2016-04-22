@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  *
@@ -233,13 +234,15 @@ public class NewUserPanel extends javax.swing.JPanel {
         String passString = new String(passwordNewUser.getPassword());
         if (match && validUser && phoneValid && StrengthTest.getStrength(passString)) {
             
-            String savedPass = SHA256.getSHA256Hash(userNewAccount.getText()+passString);
+            String uuidSalt = UUID.randomUUID().toString().replaceAll("-", "");
+            
+            String savedPass = SHA256.getSHA256Hash(userNewAccount.getText()+uuidSalt+passString);
             try(PrintWriter out = new PrintWriter(new FileWriter("output.txt", true)))
             {
-                out.print(userNewAccount.getText() + " " + savedPass + " " + phoneNumField.getText() +"\n");
+                out.print(userNewAccount.getText() + " " + uuidSalt + " " + savedPass + " " + phoneNumField.getText() +"\n");
                 }catch(IOException e){
             }
-            list.addToPasswordList(new Passwords(userNewAccount.getText(), savedPass, phoneNumField.getText()));
+            list.addToPasswordList(new Passwords(userNewAccount.getText(), uuidSalt, savedPass, phoneNumField.getText()));
             passwordCheck.setForeground(Color.green);
             passwordCheck.setText("Password Accepted");
         }
