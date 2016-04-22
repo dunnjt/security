@@ -77,6 +77,15 @@ public class NewUserPanel extends javax.swing.JPanel {
 
         jLabel4.setText("Password:");
 
+        passwordNewUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                passwordNewUserKeyTyped(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                passwordNewUserKeyReleased(evt);
+            }
+        });
+
         jLabel5.setText("Confirm Password:");
 
         newUserSubmit.setText("Submit");
@@ -178,6 +187,26 @@ public class NewUserPanel extends javax.swing.JPanel {
         generatePass();
     }//GEN-LAST:event_newUserSubmitActionPerformed
 
+    private void passwordNewUserKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordNewUserKeyTyped
+       
+    }//GEN-LAST:event_passwordNewUserKeyTyped
+
+    private void passwordNewUserKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_passwordNewUserKeyReleased
+        checkPassStrength();
+    }//GEN-LAST:event_passwordNewUserKeyReleased
+
+    private static void checkPassStrength() {
+        String passString = new String(passwordNewUser.getPassword());
+        if(!StrengthTest.getStrength(passString)) {
+            passwordCheck.setForeground(Color.red);
+            passwordCheck.setText("Weak Password");
+        }
+        else {
+            passwordCheck.setForeground(Color.green);
+            passwordCheck.setText("Good Password");
+        }
+    }
+    
     private static void generatePass() {
         
         boolean validUser = true;
@@ -201,8 +230,9 @@ public class NewUserPanel extends javax.swing.JPanel {
             passwordCheck.setText("Invalid Phone Number Length");
             phoneValid = false;
         }
-        if (match&&validUser&&phoneValid) {
-            String passString = new String(passwordNewUser.getPassword());
+        String passString = new String(passwordNewUser.getPassword());
+        if (match && validUser && phoneValid && StrengthTest.getStrength(passString)) {
+            
             String savedPass = SHA256.getSHA256Hash(userNewAccount.getText()+passString);
             try(PrintWriter out = new PrintWriter(new FileWriter("output.txt", true)))
             {

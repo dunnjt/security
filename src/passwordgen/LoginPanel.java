@@ -6,6 +6,8 @@
 package passwordgen;
 
 import java.awt.Color;
+import java.security.SecureRandom;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -14,6 +16,7 @@ import java.awt.Color;
 public class LoginPanel extends javax.swing.JPanel {
     
     private static int token;
+    private static Plivo sms;
 
     /**
      * Creates new form LoginPanel
@@ -163,8 +166,12 @@ public class LoginPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_genTokenMouseClicked
 
     private void LoginMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LoginMousePressed
-
-        checkLoginAttempt();
+        if(sms.expiredToken()) {
+            JOptionPane.showMessageDialog(this, "Token Expired. Generate New Token");
+        }
+        else {
+            checkLoginAttempt();
+        }
     }//GEN-LAST:event_LoginMousePressed
 
     private void LoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginActionPerformed
@@ -186,9 +193,10 @@ public class LoginPanel extends javax.swing.JPanel {
             passCheckMain.setText("Username Information Incorrect");
         }
         else {
-            Plivo sms = new Plivo();
-            token = Plivo.createCode();
-            sms.sendCode(token, list.getPasswordList().get(index).getPhone());
+            sms = new Plivo();
+            token = sms.createCode();
+            sms.startTimer();
+            //sms.sendCode(token, list.getPasswordList().get(index).getPhone());
             passCheckMain.setForeground(Color.green);
             passCheckMain.setText("Token Generated");
         }
@@ -225,7 +233,7 @@ public class LoginPanel extends javax.swing.JPanel {
     }
     
     private static boolean tokenCheck() {
-        return tokenField.getText().equals(Integer.toString(token));
+        return tokenField.getText().equals(Integer.toString(token)) && !sms.expiredToken();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

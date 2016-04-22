@@ -14,10 +14,14 @@ import com.plivo.helper.exception.PlivoException;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
+import static passwordgen.TokenTimer.expiredToken;
 
 
 /**
- *
+ *Plivo Class - uses Plivo API to create SMS Token and forward that to Cell provider.
+ * Class code is primarily derived from Plivo API.
  * @author johndunn
  */
 public class Plivo {
@@ -26,20 +30,48 @@ public class Plivo {
     private String authToken = "ZTYyMTkzNDUyYjdjY2ZmNWNlMWNjMmMwNDBmOWQ4";
     private RestAPI api = new RestAPI(authId, authToken, "v1");
     private boolean status = false;
+    private int shortCode;
+    private Timer timer;
+    private boolean expired = false;
 
     public Plivo() {
 
     }
 
-    public static int createCode() {
+    /**
+     * createCode() generates a SecureRandom 6 digit number.
+     * @return 6 digit int to be used as SMS token for login.
+     */
+    public int createCode() {
 
         SecureRandom rnd = new SecureRandom();
-        int shortCode = 100000 + rnd.nextInt(900000);
+        shortCode = 100000 + rnd.nextInt(900000);
         
         return shortCode;
     }
+
+    public void startTimer() {
+        timer = new Timer();
+        timer.schedule(new TokenExpire(), 30*1000);
+    }
+
+    class TokenExpire extends TimerTask {
+        public void run() {
+            expired = true;
+            timer.cancel();
+        }
+    }
     
-    public static int getTime() {
+    public boolean expiredToken() {
+        return expired;
+    }
+    
+    
+    /**
+     * 
+     * @return 
+     */
+    public int getTime() {
         
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
